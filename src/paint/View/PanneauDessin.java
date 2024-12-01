@@ -23,15 +23,45 @@ import paint.Model.*;
 
 public class PanneauDessin extends JPanel {
 
+    /**
+     * Coordonnées de début et de fin pour dessiner une forme.
+     */
     protected int startX, startY, endX, endY;
-    protected String forme = "FreeHand"; // Forme par défaut
+
+    /**
+     * Type de forme actuellement sélectionné. Par défaut : FreeHand.
+     */
+    protected String forme = "FreeHand";
+
+    /**
+     * Indique si l'utilisateur est en train de dessiner.
+     */
     protected boolean isDrawing = false;
+
+    /**
+     * Image de fond du panneau de dessin.
+     */
     protected BufferedImage canvas;
+
+    /**
+     * Couleur actuelle utilisée pour dessiner les formes.
+     */
     protected Color color;
 
+    /**
+     * Liste des formes de dessin.
+     */
     private ArrayList<Forme> formes;
+
+    /**
+     * Forme active de dessin
+     */
     private Forme currentForme;
-    private FreeHandForme freeHandForme; // Instance pour gérer FreeHand
+
+    /**
+     * Instance pour gérer FreeHand
+     */
+    private FreeHandForme freeHandForme;
 
     /**
      * Constructeur du panneau de dessin.
