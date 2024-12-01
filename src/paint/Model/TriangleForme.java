@@ -34,6 +34,8 @@ public class TriangleForme extends Forme {
     @Override
     public void draw(Graphics g) {
         g.setColor(color);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setStroke(new BasicStroke(1));
         int[] xPoints = { startX, (startX + endX) / 2, endX };
         int[] yPoints = { endY, startY, endY };
         g.drawPolygon(xPoints, yPoints, 3);

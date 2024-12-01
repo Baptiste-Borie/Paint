@@ -18,6 +18,11 @@ public class FreeHandForme extends Forme {
     private List<Point> points;
 
     /**
+     * Largeur du trait pour dessiner la forme.
+     */
+    private int lineWidth;
+
+    /**
      * Constructeur de la classe FreeHandForme.
      * Initialise la forme avec un point de départ et une couleur.
      *
@@ -29,6 +34,24 @@ public class FreeHandForme extends Forme {
         super(startX, startY, startX, startY, color);
         this.points = new ArrayList<>();
         this.points.add(new Point(startX, startY));
+        this.lineWidth = 1; // Largeur du trait par défaut
+    }
+
+    /**
+     * Constructeur de la classe FreeHandForme.
+     * Initialise la forme avec un point de départ, une couleur, et une largeur de
+     * ligne.
+     *
+     * @param startX    Coordonnée X du point de départ.
+     * @param startY    Coordonnée Y du point de départ.
+     * @param color     Couleur de la forme.
+     * @param lineWidth Largeur du trait pour dessiner la forme.
+     */
+    public FreeHandForme(int startX, int startY, Color color, int lineWidth) {
+        super(startX, startY, startX, startY, color);
+        this.points = new ArrayList<>();
+        this.points.add(new Point(startX, startY));
+        this.lineWidth = lineWidth; // Initialisation de la largeur du trait
     }
 
     /**
@@ -57,6 +80,7 @@ public class FreeHandForme extends Forme {
         }
 
         Graphics2D g2d = (Graphics2D) g;
+        g2d.setStroke(new BasicStroke(lineWidth));
         g2d.setColor(color);
 
         for (int i = 1; i < points.size(); i++) {

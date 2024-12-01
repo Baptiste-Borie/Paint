@@ -35,6 +35,8 @@ public class LigneForme extends Forme {
     @Override
     public void draw(Graphics g) {
         g.setColor(color);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setStroke(new BasicStroke(1));
         g.drawLine(startX, startY, endX, endY);
     }
 

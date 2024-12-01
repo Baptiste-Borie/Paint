@@ -4,7 +4,7 @@
     <property name="src.dir" value="src"/>
     <property name="build.dir" value="build"/>
     <property name="doc.dir" value="doc"/>
-    <property name="main.class" value="paint.Fenetre"/>
+    <property name="main.class" value="paint.View.Fenetre"/>
 
     <!-- Nettoyage des dossiers build et doc -->
     <target name="clean">

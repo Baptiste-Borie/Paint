@@ -13,11 +13,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.*;
 
-import paint.Model.Forme;
-import paint.Model.FreeHandForme;
-import paint.Model.LigneForme;
-import paint.Model.RectangleForme;
-import paint.Model.TriangleForme;
+import paint.Model.*;
 
 public class PanneauDessin extends JPanel {
 
@@ -59,8 +55,19 @@ public class PanneauDessin extends JPanel {
 
                 if (isDrawing) {
                     if (forme.equals("FreeHand") && freeHandForme != null) {
+                        changeCursor("FreeHand");
                         freeHandForme.addPoint(endX, endY); // Ajout de points pour FreeHand
+                    } else if (forme.equals("Gomme")) {
+                        changeCursor("Gomme");
+                        // Dessiner en blanc avec la gomme
+                        if (freeHandForme == null) {
+                            freeHandForme = new FreeHandForme(endX, endY, Color.WHITE, 8); // Début du dessin de gomme
+                        } else {
+                            freeHandForme.addPoint(endX, endY); // Ajouter à la forme existante
+                        }
                     } else {
+                        // Autres formes géométriques comme Rectangle, Ligne, etc.
+                        changeCursor("default");
                         switch (forme) {
                             case "Rectangle":
                                 currentForme = new RectangleForme(startX, startY, endX, endY, color);
@@ -70,6 +77,9 @@ public class PanneauDessin extends JPanel {
                                 break;
                             case "Triangle":
                                 currentForme = new TriangleForme(startX, startY, endX, endY, color);
+                                break;
+                            case "Cercle":
+                                currentForme = new CircleForme(startX, startY, endX, endY, color);
                                 break;
                         }
                     }
@@ -83,7 +93,7 @@ public class PanneauDessin extends JPanel {
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent e) {
-                // Supprime une forme avec clic droit ou Ctrl + clic gauche
+                // Supprimer une forme avec clic droit ou Ctrl + clic gauche
                 if (SwingUtilities.isRightMouseButton(e)
                         || (e.isControlDown() && SwingUtilities.isLeftMouseButton(e))) {
                     Point point = e.getPoint();
@@ -96,6 +106,11 @@ public class PanneauDessin extends JPanel {
                     if (forme.equals("FreeHand")) {
                         freeHandForme = new FreeHandForme(startX, startY, color);
                         formes.add(freeHandForme); // Ajouter immédiatement à la liste
+                    } else if (forme.equals("Gomme")) {
+                        // Si c'est la gomme, créez une nouvelle forme FreeHand en blanc
+
+                        freeHandForme = new FreeHandForme(startX, startY, Color.WHITE, 8);
+                        formes.add(freeHandForme); // Ajouter la gomme au dessin
                     }
                 }
             }
@@ -150,13 +165,14 @@ public class PanneauDessin extends JPanel {
      * Dessine la forme en cours sur le canvas.
      */
     public void drawOnCanvas() {
-        if (forme.equals("FreeHand")) {
+        if (forme.equals("FreeHand") || forme.equals("Gomme")) {
             return; // Le mode FreeHand est déjà géré via mouseDragged
         }
 
         if (currentForme != null) {
             Graphics2D g2d = this.canvas.createGraphics();
             g2d.setColor(currentForme.getColor());
+
             currentForme.draw(g2d);
             g2d.dispose();
 
@@ -192,6 +208,12 @@ public class PanneauDessin extends JPanel {
                 break;
             case "Triangle":
                 this.currentForme = new TriangleForme(startX, startY, endX, endY, color);
+                break;
+            case "Cercle":
+                this.currentForme = new CircleForme(startX, startY, endX, endY, color);
+                break;
+            case "FreeHand":
+                this.currentForme = new FreeHandForme(startX, startY, color);
                 break;
         }
         if (this.currentForme != null) {
@@ -235,6 +257,23 @@ public class PanneauDessin extends JPanel {
 
         if (isDrawing && currentForme != null) {
             currentForme.draw(g); // Dessiner la forme actuelle
+        }
+    }
+
+    public void changeCursor(String cursor) {
+        switch (cursor) {
+            case "FreeHand":
+                setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+                break;
+            case "Gomme":
+                ImageIcon eraserIcon = new ImageIcon("assets/la-gomme.png");
+                Image eraserImage = eraserIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                Cursor eraserCursor = Toolkit.getDefaultToolkit().createCustomCursor(
+                        eraserImage, new Point(0, 0), "eraser");
+                setCursor(eraserCursor);
+                break;
+            default:
+                setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
     }
 }

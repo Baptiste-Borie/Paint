@@ -34,6 +34,8 @@ public class RectangleForme extends Forme {
     @Override
     public void draw(Graphics g) {
         g.setColor(color);
+        Graphics2D g2d = (Graphics2D) g;
+        g2d.setStroke(new BasicStroke(1));
         int width = Math.abs(endX - startX);
         int height = Math.abs(endY - startY);
         int x = Math.min(startX, endX);
@@ -42,8 +44,7 @@ public class RectangleForme extends Forme {
     }
 
     /**
-     * Vérifie si un point donné est contenu dans le rectangle. Possède une
-     * tolérance de 5 pixels.
+     * Vérifie si un point donné est contenu dans le rectangle.
      *
      * @param p Point à vérifier.
      * @return {@code true} si le point est contenu dans le rectangle, sinon
