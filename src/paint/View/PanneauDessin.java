@@ -168,6 +168,15 @@ public class PanneauDessin extends JPanel {
     }
 
     /**
+     * Retourne le type de forme actuellement sélectionné.
+     * 
+     * @return Le type de forme actuellement sélectionné.
+     */
+    public String getForme() {
+        return forme;
+    }
+
+    /**
      * Dessine la forme en cours sur le canvas.
      */
     public void drawOnCanvas() {
@@ -253,29 +262,40 @@ public class PanneauDessin extends JPanel {
         this.color = color;
     }
 
+    /**
+     * Redessine les composants graphiques sur le panneau.
+     *
+     * @param g l'objet Graphics utilisé pour dessiner sur le composant.
+     */
     @Override
-    public void paintComponent(Graphics g) {
+    protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
         for (Forme forme : formes) {
-            forme.draw(g); // Dessiner toutes les formes existantes
+            forme.draw(g);
         }
 
         if (isDrawing && currentForme != null) {
-            currentForme.draw(g); // Dessiner la forme actuelle
+            currentForme.draw(g);
         }
     }
 
+    /**
+     * Change le curseur du panneau en fonction de l'outil sélectionné.
+     *
+     * @param cursor une chaîne représentant le type d'outil, par exemple
+     *               "FreeHand" pour un curseur en croix ou "Gomme" pour une icône
+     *               de gomme.
+     */
     public void changeCursor(String cursor) {
         switch (cursor) {
             case "FreeHand":
                 setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
                 break;
             case "Gomme":
-                ImageIcon eraserIcon = new ImageIcon("assets/la-gomme.png");
-                Image eraserImage = eraserIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+                ImageIcon eraserIcon = new ImageIcon("assets/eraser-solid-24.png");
                 Cursor eraserCursor = Toolkit.getDefaultToolkit().createCustomCursor(
-                        eraserImage, new Point(0, 0), "eraser");
+                        eraserIcon.getImage(), new Point(0, 0), "eraser");
                 setCursor(eraserCursor);
                 break;
             default:
@@ -283,9 +303,13 @@ public class PanneauDessin extends JPanel {
         }
     }
 
+    /**
+     * Sauvegarde le projet actuel dans un fichier.
+     *
+     * @param file le fichier où les données du projet doivent être sauvegardées.
+     */
     public void sauvegarderProjet(File file) {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
-            // Sauvegarde des données de dessin
             oos.writeObject(formes); // Sérialisation de la liste des formes
             oos.writeObject(color); // Sauvegarde de la couleur actuelle
             oos.writeInt(canvas.getWidth()); // Sauvegarde de la largeur du canvas
@@ -295,17 +319,22 @@ public class PanneauDessin extends JPanel {
         }
     }
 
+    /**
+     * Charge un projet sauvegardé à partir d'un fichier.
+     *
+     * @param file le fichier contenant les données du projet à charger.
+     */
     public void chargerProjet(File file) {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
-            // Récupérer la liste des formes
-            formes = (ArrayList<Forme>) ois.readObject();
+
+            formes = (ArrayList<Forme>) ois.readObject(); // Récupérer la liste des formes
             color = (Color) ois.readObject(); // Récupérer la couleur sauvegardée
 
             // Récupérer les dimensions du canvas
             int width = ois.readInt();
             int height = ois.readInt();
 
-            // Réinitialiser le canvas
+            // Réinitialisation du canvas
             canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
             repaint();
         } catch (IOException | ClassNotFoundException e) {
