@@ -20,7 +20,7 @@ public class PanneauOutils extends JPanel {
      */
     public PanneauOutils(PanneauDessin pan) {
         super();
-        this.setLayout(new GridLayout(1, 10));
+        this.setLayout(new GridLayout(1, 11));
 
         modeButtons = new HashMap<>(); // Initialisation de la Map
 
