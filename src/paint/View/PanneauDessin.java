@@ -17,6 +17,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 
 import paint.Model.*;
@@ -369,6 +371,39 @@ public class PanneauDessin extends JPanel {
             repaint();
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Exporte le contenu actuel du canvas en tant qu'image PNG.
+     *
+     * @param file Le fichier où l'image sera exportée.
+     */
+    public void exporterImage(File file) {
+        try {
+            // Crée une image contenant le rendu actuel du panneau de dessin
+            BufferedImage exportImage = new BufferedImage(this.getWidth(), this.getHeight(),
+                    BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = exportImage.createGraphics();
+
+            // Dessine le panneau sur l'image
+            this.paint(g2d);
+            g2d.dispose();
+
+            // Vérifie si l'extension est déjà présente, sinon ajoute ".png"
+            if (!file.getName().toLowerCase().endsWith(".png")) {
+                file = new File(file.getAbsolutePath() + ".png");
+            }
+
+            // Écrit l'image dans le fichier
+            ImageIO.write(exportImage, "png", file);
+
+            JOptionPane.showMessageDialog(this, "Image exportée avec succès : " + file.getAbsolutePath(),
+                    "Export Réussi", JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Erreur lors de l'exportation de l'image : " + ex.getMessage(),
+                    "Erreur d'Export", JOptionPane.ERROR_MESSAGE);
+            ex.printStackTrace();
         }
     }
 

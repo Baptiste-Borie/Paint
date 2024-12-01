@@ -58,17 +58,27 @@ public class PanneauOutils extends JPanel {
             }
         });
 
+        JButton exportButton = createIconButton("assets/export.png", e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Export Image");
+            if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                File file = fileChooser.getSelectedFile();
+                pan.exporterImage(file);
+            }
+        });
+
         // Ajout des boutons au panneau
-        this.add(resetButton);
-        this.add(rubberButton);
         this.add(freeHandButton);
-        this.add(rectangleButton);
-        this.add(circleButton);
-        this.add(triangleButton);
         this.add(lineButton);
+        this.add(rectangleButton);
+        this.add(triangleButton);
+        this.add(circleButton);
+        this.add(rubberButton);
         this.add(colorButton);
+        this.add(resetButton);
         this.add(saveButton);
         this.add(loadButton);
+        this.add(exportButton);
 
         // Mise à jour de l'état initial
         updateActiveButton(pan.getForme());
