@@ -1,0 +1,44 @@
+<project name="paint" default="run" basedir=".">
+
+    <!-- Définition des propriétés -->
+    <property name="src.dir" value="src"/>
+    <property name="build.dir" value="build"/>
+    <property name="doc.dir" value="doc"/>
+    <property name="main.class" value="paint.Fenetre"/>
+
+    <!-- Nettoyage des dossiers build et doc -->
+    <target name="clean">
+        <delete includeEmptyDirs="true">
+            <fileset dir="${build.dir}" includes="**/*"/>
+            <fileset dir="${doc.dir}" includes="**/*"/>
+        </delete>
+    </target>
+
+    <!-- Compilation des fichiers Java -->
+    <target name="compile">
+        <mkdir dir="${build.dir}"/>
+        <javac srcdir="${src.dir}" destdir="${build.dir}">
+            <include name="paint/**/*.java"/>
+        </javac>
+    </target>
+
+    <!-- Exécution du programme -->
+    <target name="run" depends="compile">
+        <java classname="${main.class}" fork="true">
+            <classpath>
+                <pathelement path="${build.dir}"/>
+            </classpath>
+        </java>
+    </target>
+
+    <!-- Génération de la javadoc -->
+    <target name="javadoc">
+        <mkdir dir="${doc.dir}"/>
+        <javadoc destdir="${doc.dir}" sourcepath="${src.dir}">
+            <fileset dir="${src.dir}">
+                <include name="**/*.java" />
+            </fileset>
+        </javadoc>
+    </target>
+
+</project>
