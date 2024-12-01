@@ -8,8 +8,9 @@
 package paint.Model;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public abstract class Forme {
+public abstract class Forme implements Serializable {
     /**
      * Coordonnée X du point de départ de la forme.
      */

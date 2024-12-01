@@ -2,6 +2,8 @@ package paint.View;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+
 import javax.swing.*;
 
 public class PanneauOutils extends JPanel {
@@ -26,6 +28,32 @@ public class PanneauOutils extends JPanel {
             }
         });
 
+        JButton saveButton = new JButton("Save");
+        saveButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Save Project");
+                if (fileChooser.showSaveDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    pan.sauvegarderProjet(file);
+                }
+            }
+        });
+
+        JButton loadButton = new JButton("Load");
+        loadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("Load Project");
+                if (fileChooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+                    File file = fileChooser.getSelectedFile();
+                    pan.chargerProjet(file);
+                }
+            }
+        });
+
         // Ajout des boutons au panneau
         this.add(resetButton);
         this.add(rubberButton);
@@ -35,6 +63,8 @@ public class PanneauOutils extends JPanel {
         this.add(triangleButton);
         this.add(lineButton);
         this.add(colorButton);
+        this.add(saveButton);
+        this.add(loadButton);
     }
 
     /**

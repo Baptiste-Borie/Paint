@@ -10,6 +10,12 @@ package paint.View;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import javax.swing.*;
 
@@ -276,4 +282,35 @@ public class PanneauDessin extends JPanel {
                 setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
         }
     }
+
+    public void sauvegarderProjet(File file) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+            // Sauvegarde des données de dessin
+            oos.writeObject(formes); // Sérialisation de la liste des formes
+            oos.writeObject(color); // Sauvegarde de la couleur actuelle
+            oos.writeInt(canvas.getWidth()); // Sauvegarde de la largeur du canvas
+            oos.writeInt(canvas.getHeight()); // Sauvegarde de la hauteur du canvas
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void chargerProjet(File file) {
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+            // Récupérer la liste des formes
+            formes = (ArrayList<Forme>) ois.readObject();
+            color = (Color) ois.readObject(); // Récupérer la couleur sauvegardée
+
+            // Récupérer les dimensions du canvas
+            int width = ois.readInt();
+            int height = ois.readInt();
+
+            // Réinitialiser le canvas
+            canvas = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            repaint();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
 }
